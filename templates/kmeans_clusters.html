@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Your Chart Title Here</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"/>
+</head>
+
+<body>
+<!-- Navigation -->
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a class="nav-link" href="/">Movie Recommender</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/top_10_genres">Top 10 Genres</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/release_year_histogram">Release Year Histogram</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link active" href="/kmeans_clusters">KMeans Clusters</a>
+    </li>
+</ul>
+
+<!-- Hero Style Chart -->
+<div class="jumbotron jumbotron-fluid">
+    <div class="container text-center">
+        <h1 class="display-4">KMeans Clustering</h1>
+        <p class="lead">Using KMeans clustering to group Netflix titles into clusters based on similar features, such as
+            genres. It's a method to partition a dataset into groups that share similar characteristics.</p>
+        <img src="/kmeans_clusters_plot.png" alt="KMeans Clustering" class="img-fluid">
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>

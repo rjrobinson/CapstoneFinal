@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Movie Matrix</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"/>
+</head>
+
+<body>
+<div class="container">
+    <h1 class="text-center mt-4">Movie Matrix Recommender</h1>
+    <!-- Tab navigation -->
+    <ul class="nav nav-tabs" id="myTabs" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="recommender-tab" data-toggle="tab" href="#recommender" role="tab"
+               aria-controls="recommender" aria-selected="true">Movie Recommender</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="charts-tab" data-toggle="tab" href="#charts" role="tab" aria-controls="charts"
+               aria-selected="false">Charts for Nerds</a>
+        </li>
+    </ul>
+    <div class="tab-content" id="myTabsContent">
+        <!-- Movie Recommender Section -->
+        <div class="tab-pane fade show active" id="recommender" role="tabpanel" aria-labelledby="recommender-tab">
+            <form action="/recommend" method="post" class="mb-4" id="recommendForm">
+                <div class="form-group">
+                    <label for="query">Enter a movie title or genre:</label>
+                    <input type="text" id="query" name="query" class="form-control" required/>
+                </div>
+                <input type="submit" value="Recommend" class="btn btn-primary"/>
+            </form>
+
+            {% if recommendations %}
+            <h2 class="text-center mb-4">Recommended Movies:</h2>
+            <div class="row">
+                {% for movie in recommendations %}
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        {% if movie.poster %}
+                        <img src="{{ movie.poster }}" class="card-img-top" alt="Movie Poster"/>
+                        {% endif %}
+
+                        <div class="card-body">
+                            <h5 class="card-title">{{ movie.title }}</h5>
+                            <p class="card-text">Type: {{ movie.movie_or_tv_show }}</p>
+                            <p class="card-text">Rating: {{ movie.rating }}</p>
+                            <p class="card-text">Director: {{ movie.director }}</p>
+                            <p class="card-text">Country: {{ movie.country }}</p>
+                            <p class="card-text">
+                                Date Added to Platform: {{ movie.date_added_platform }}
+                            </p>
+                            <p class="card-text">Year Released: {{ movie.release_year }}</p>
+                            <p class="card-text">Duration: {{ movie.duration_seconds }}</p>
+                            <p class="card-text">Genres: {{ movie.genre_type }}</p>
+                            <p class="card-text" style="display: none" id="description-{{ movie.title }}">
+                                Description: {{ movie.description }}
+                            </p>
+                            <button onclick="toggleDescription('{{ movie.title }}')">Show/Hide Description</button>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+        <!-- Charts for Nerds Section -->
+        <div class="tab-pane fade" id="charts" role="tabpanel" aria-labelledby="charts-tab">
+            <h2>Movie Data Nerd Plots:</h2>
+            <img src="/top_10_genres_plot.png" alt="Top 10 Genres">
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    function toggleDescription(title) {
+        var element = document.getElementById("description-" + title);
+        if (
+            element.style.display === "none" ||
+            element.style.display === ""
+        ) {
+            element.style.display = "block";
+        } else {
+            element.style.display = "none";
+        }
+    }
+</script>
+</body>
+
+</html>
