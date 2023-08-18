@@ -32,9 +32,9 @@
             <div class="quick-actions d-flex justify-content-between">
                 <button type="button" onclick="submitGenre('Action')" class="btn btn-primary">Action</button>
                 <button type="button" onclick="submitGenre('Stand-Up Comedy')" class="btn btn-primary">Comedy</button>
-                <button type="button" onclick="submitGenre('Documentary')" class="btn btn-primary">Documentary</button>
-                <button type="button" onclick="submitGenre('Romance')" class="btn btn-primary">Romance</button>
-                <button type="button" onclick="submitGenre('Kids TV')" class="btn btn-primary">Kids TV</button>
+                <button type="button" onclick="submitGenre('TALK SHOWS')" class="btn btn-primary">Talk Shows</button>
+                <button type="button" onclick="submitGenre('ANIME SERIES')" class="btn btn-primary">Anime</button>
+                <button type="button" onclick="submitGenre('CRIME TV SHOWS')" class="btn btn-primary">Crime TV</button>
             </div>
             <div class="form-group">
                 <label for="query">Enter a movie title or genre:</label>
@@ -78,32 +78,45 @@
             <h2 class="text-center mb-4">Recommended Movies:</h2>
             <div class="row">
                 {% for movie in recommendations %}
-                    <div class="col-md-4 mb-4">
-                        <div class="card">
-                            {% if movie.poster %}
-                                <img src="{{ movie.poster }}" class="card-img-top" alt="Movie Poster"/>
-                            {% endif %}
+                    {% if movie.poster_url %}
+                        <div class="col-md-4 mb-4">
+                            <div class="card">
+                                <a href="#" onclick="submitGenre('{{ movie.title }}')">
+                                    <img src="{{ movie.poster_url }}" class="card-img-top" alt="Movie Poster"/>
+                                </a>
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        <a href="#" onclick="submitGenre('{{ movie.title }}')"
+                                           class="text-decoration-none text-dark">{{ movie.title }}</a>
+                                    </h5>
+                                    <p class="card-text">Type: {{ movie.movie_or_tv_show }}</p>
+                                    <p class="card-text">Rating: {{ movie.rating }}</p>
+                                    <p class="card-text">Director: {{ movie.director }}</p>
+                                    <p class="card-text">Country: {{ movie.country }}</p>
+                                    <p class="card-text">
+                                        Date Added to Platform: {{ movie.date_added_platform }}
+                                    </p>
+                                    <p class="card-text">Year Released: {{ movie.release_year }}</p>
+                                    <p class="card-text">Duration: {{ movie.duration_seconds }}</p>
 
-                            <div class="card-body">
-                                <h5 class="card-title">{{ movie.title }}</h5>
-                                <p class="card-text">Type: {{ movie.movie_or_tv_show }}</p>
-                                <p class="card-text">Rating: {{ movie.rating }}</p>
-                                <p class="card-text">Director: {{ movie.director }}</p>
-                                <p class="card-text">Country: {{ movie.country }}</p>
-                                <p class="card-text">
-                                    Date Added to Platform: {{ movie.date_added_platform }}
-                                </p>
-                                <p class="card-text">Year Released: {{ movie.release_year }}</p>
-                                <p class="card-text">Duration: {{ movie.duration_seconds }}</p>
-                                <p class="card-text">Genres: {{ movie.genre_type }}</p>
-                                <p class="card-text" style="display: none" id="description-{{ movie.title }}">
-                                    Description: {{ movie.description }}
-                                </p>
-                                <button onclick="toggleDescription('{{ movie.title }}')">Show/Hide Description
-                                </button>
+                                    <p class="card-text">
+                                        Genres:
+                                        {% for genre in movie.genre_type.split(',') %}
+                                            <a href="#" onclick="submitGenre('{{ genre.strip() }}')"
+                                               class="text-decoration-none text-primary">{{ genre }}</a>
+                                            {% if not loop.last %}, {% endif %}
+                                        {% endfor %}
+                                    </p>
+
+                                    <p class="card-text" style="display: none" id="description-{{ movie.title }}">
+                                        Description: {{ movie.description }}
+                                    </p>
+                                    <button onclick="toggleDescription('{{ movie.title }}')">Show/Hide Description
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    {% endif %}
                 {% endfor %}
             </div>
         {% endif %}

@@ -1,3 +1,4 @@
+import requests
 from flask import Flask, render_template, request, Response
 from sklearn.cluster import KMeans
 
@@ -16,6 +17,21 @@ app = Flask(__name__)
 netflix_data = NetflixData()
 
 
+def get_poster_url(title):
+    omdb_api_key = '827c464d'
+    omdb_url = f'http://www.omdbapi.com/?t={title}&apikey={omdb_api_key}'
+    response = requests.get(omdb_url)
+    movie_data = response.json()
+
+    if 'Poster' in movie_data:
+        print(f"Successfully retrieved poster for '{title}'.")
+        return movie_data['Poster']
+    else:
+        print(f"Failed to retrieve poster for '{title}'.")
+        return None
+
+
+
 # # Call other methods as needed
 @app.route('/')
 def index():
@@ -25,7 +41,11 @@ def index():
 @app.route('/recommend', methods=['POST'])
 def recommend_by():
     query = request.form['query'].upper()
-    recommendations = netflix_data.recommend_by(query)  # Call your combined recommendation function
+    recommendations = netflix_data.recommend_by(query)
+
+    for movie in recommendations:
+        movie['poster_url'] = get_poster_url(movie['title'])
+
     return render_template('index.html', recommendations=recommendations)
 
 
@@ -110,15 +130,15 @@ def kmeans_clusters_plot():
     kmeans_model = KMeans(n_clusters=34, random_state=0)
     y_Kmeans34 = kmeans_model.fit_predict(X_genre_type)
 
-    scatter = plt.scatter(X_genre_type[:, 0], X_genre_type[:, 1], c=y_Kmeans34, cmap='viridis', s=50, ax=ax)
+    scatter = ax.scatter(X_genre_type[:, 0], X_genre_type[:, 1], c=y_Kmeans34, cmap='viridis', s=50)
 
     # Plotting the cluster centers
     centers = kmeans_model.cluster_centers_
-    plt.scatter(centers[:, 0], centers[:, 1], c='red', s=200, alpha=0.75)
+    ax.scatter(centers[:, 0], centers[:, 1], c='red', s=200, alpha=0.75)
 
     ax.set_title('KMeans Clustering of Genres')
-    ax.set_xlabel('Feature 1')  # You can change this to be more descriptive
-    ax.set_ylabel('Feature 2')  # You can change this to be more descriptive
+    ax.set_xlabel('Genre Direction 1')
+    ax.set_ylabel('Genre Direction 2')
 
     # Create a legend with color mappings
     legend_labels = [f"Cluster {i}" for i in range(34)]

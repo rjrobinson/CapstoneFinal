@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from flask import Response
 
+
 class NetflixData:
     def __init__(self, filename='imdb/netflix_titles.csv'):
         # Load the dataset
@@ -36,19 +37,20 @@ class NetflixData:
         df_split = self.data_netflix['genre_type'].str.split(',', expand=True)
         df_split = df_split.fillna('-')
         # Creating dummies for each unique genre
-        group_dummies = [pd.get_dummies(df_split[y].apply(lambda x: x.strip()), dtype='int') for y in df_split.columns]
-        group_dummies = pd.concat(group_dummies, axis=1)
-        group_dummies = group_dummies.fillna(0).astype('uint8')
+        self.group_dummies = [pd.get_dummies(df_split[y].apply(lambda x: x.strip()), dtype='int') for y in
+                              df_split.columns]
+        self.group_dummies = pd.concat(self.group_dummies, axis=1)
+        self.group_dummies = self.group_dummies.fillna(0).astype('uint8')
         # Converting titles to uppercase
         self.data_netflix['title'] = self.data_netflix['title'].apply(lambda x: x.upper())
         # Applying KMeans clustering to the genre data
-        X_genre_type = np.array(group_dummies)
+        X_genre_type = np.array(self.group_dummies)  # Updated reference to group_dummies
         kmeans_model = KMeans(n_clusters=34, random_state=0)
         y_Kmeans34 = kmeans_model.fit_predict(X_genre_type)
         # Storing the cluster labels in the dataframe
         self.data_netflix['clusters_genre'] = y_Kmeans34
 
-    def recommend_by(self, query, top_n=50):
+    def recommend_by(self, query, top_n=5):
         recommendations_by_actor = self.recommend_by_actor(query, top_n)
         recommendations_by_title = self.recommend_by_title(query, top_n)
         recommendations_by_director = self.recommend_by_director(query, top_n)
