@@ -27,7 +27,6 @@ class NetflixData:
         self.data_netflix['cast'] = self.data_netflix['cast'].fillna('uninformed cast')
         self.data_netflix['director'] = self.data_netflix['director'].fillna('uninformed director')
         self.data_netflix['country'] = self.data_netflix['country'].fillna('uninformed country')
-        # self.data_netflix = self.data_netflix[self.data_netflix['country'] == 'United States']
         # Converting genres to uppercase
         self.data_netflix['genre_type'] = self.data_netflix['genre_type'].apply(lambda x: x.upper())
 
